@@ -42,8 +42,34 @@ def inject_styles() -> None:
             [data-testid="stSidebar"] {
                 background: linear-gradient(180deg, #0f172a 0%, #16324f 100%);
             }
-            [data-testid="stSidebar"] * {
+            [data-testid="stSidebar"] label,
+            [data-testid="stSidebar"] .stMarkdown,
+            [data-testid="stSidebar"] .stCaption,
+            [data-testid="stSidebar"] .stSubheader,
+            [data-testid="stSidebar"] .stRadio label,
+            [data-testid="stSidebar"] [data-testid="stFileUploaderDropzoneInstructions"] {
                 color: #f8fafc;
+            }
+            [data-testid="stSidebar"] input,
+            [data-testid="stSidebar"] textarea,
+            [data-testid="stSidebar"] [data-baseweb="input"] input,
+            [data-testid="stSidebar"] [data-baseweb="input"] textarea,
+            [data-testid="stSidebar"] [data-baseweb="select"] input,
+            [data-testid="stSidebar"] [data-baseweb="select"] div,
+            [data-testid="stSidebar"] [data-baseweb="select"] span {
+                color: #0f172a !important;
+                -webkit-text-fill-color: #0f172a !important;
+            }
+            [data-testid="stSidebar"] [data-baseweb="input"],
+            [data-testid="stSidebar"] [data-baseweb="select"] > div,
+            [data-testid="stSidebar"] .stDateInput > div > div,
+            [data-testid="stSidebar"] .stNumberInput > div > div {
+                background: #ffffff;
+            }
+            [data-testid="stSidebar"] input::placeholder,
+            [data-testid="stSidebar"] textarea::placeholder {
+                color: #64748b !important;
+                -webkit-text-fill-color: #64748b !important;
             }
             .hero-card {
                 padding: 1.25rem 1.4rem;
