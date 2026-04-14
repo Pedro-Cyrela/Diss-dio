@@ -1,0 +1,8 @@
+[server]
+headless = false
+address = "localhost"
+port = 8501
+maxUploadSize = 200
+
+[browser]
+gatherUsageStats = false
