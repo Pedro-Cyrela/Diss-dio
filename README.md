@@ -56,7 +56,8 @@ Opcao 2, PowerShell:
 .\abrir_dissidio.ps1
 ```
 
-O app abre localmente no navegador, em `http://localhost:8501`.
+O app abre localmente no navegador, preferencialmente em `http://localhost:8501`.
+Se essa porta ja estiver ocupada, o script escolhe a proxima porta livre automaticamente.
 Na primeira instalacao, o processo pode levar alguns minutos por causa do download das bibliotecas.
 
 ## Fluxo sugerido para distribuir ao time
