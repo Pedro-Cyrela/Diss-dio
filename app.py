@@ -71,6 +71,14 @@ def inject_styles() -> None:
                 color: #64748b !important;
                 -webkit-text-fill-color: #64748b !important;
             }
+            [data-testid="stSidebar"] .stRadio label,
+            [data-testid="stSidebar"] .stRadio label p,
+            [data-testid="stSidebar"] [role="radiogroup"] label,
+            [data-testid="stSidebar"] [role="radiogroup"] label p,
+            [data-testid="stSidebar"] [role="radiogroup"] span {
+                color: #f8fafc !important;
+                -webkit-text-fill-color: #f8fafc !important;
+            }
             .hero-card {
                 padding: 1.25rem 1.4rem;
                 border: 1px solid rgba(15, 23, 42, 0.08);
