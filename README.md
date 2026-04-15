@@ -30,49 +30,44 @@ Aplicacao Streamlit para calcular reajuste salarial por dissidio com foco operac
 
 Os parametros ficam em `AppData\Roaming\CalculadoraDissidio\config.json`, separados por usuario da maquina.
 
-## Uso interno recomendado
+## Novo fluxo de uso
 
-### Primeira instalacao
+### Pre-requisito unico
 
-Opcao 1, clique duplo:
+- Ter Python 3.10 ou superior instalado na maquina e acessivel pelo comando `python`
 
-- Execute `instalar_ambiente.bat`
+### Como abrir o app
 
-Opcao 2, PowerShell:
+No proprio diretorio do projeto, execute:
 
 ```powershell
-.\instalar_ambiente.ps1
+python app.py
 ```
 
-### Abrir o app
+O `app.py` agora faz sozinho o bootstrap local:
 
-Opcao 1, clique duplo:
+- cria a pasta `.venv` se ela ainda nao existir
+- verifica se `streamlit`, `pandas`, `openpyxl` e `plotly` estao disponiveis
+- instala o que faltar com base no `requirements.txt`
+- inicia o Streamlit localmente
+- abre o navegador automaticamente
 
-- Execute `abrir_dissidio.bat`
+O app tenta usar `http://localhost:8501`. Se essa porta estiver ocupada, ele escolhe a proxima livre.
 
-Opcao 2, PowerShell:
+### Distribuicao para o time
 
-```powershell
-.\abrir_dissidio.ps1
-```
+1. Entregue a pasta do projeto por GitHub ou ZIP.
+2. Oriente o usuario a abrir um terminal dentro da pasta.
+3. Oriente o usuario a executar apenas `python app.py`.
 
-O app abre localmente no navegador, preferencialmente em `http://localhost:8501`.
-Se essa porta ja estiver ocupada, o script escolhe a proxima porta livre automaticamente.
-Na primeira instalacao, o processo pode levar alguns minutos por causa do download das bibliotecas.
+Nao ha mais dependencia operacional de `.bat`, `.ps1` ou arquivos temporarios para subir a aplicacao.
 
-## Fluxo sugerido para distribuir ao time
+## Execucao alternativa
 
-1. Versione o projeto em repositorio privado no GitHub.
-2. Cada analista clona ou recebe uma copia ZIP do projeto.
-3. Cada analista roda `instalar_ambiente.bat` uma vez.
-4. Depois disso, usa apenas `abrir_dissidio.bat`.
-
-## Execucao manual
+Se alguem ja estiver com o ambiente pronto e quiser rodar o Streamlit manualmente:
 
 ```powershell
-python -m venv .venv
-.venv\Scripts\python -m pip install -r requirements.txt
-.venv\Scripts\python -m streamlit run app.py
+.venv\Scripts\python -m streamlit run dissidio_ui.py
 ```
 
 ## Premissa importante
