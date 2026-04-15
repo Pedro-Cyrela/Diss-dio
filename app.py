@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import importlib.util
+import os
+import re
 import socket
 import subprocess
 import sys
-import threading
 import webbrowser
 from pathlib import Path
 
@@ -25,15 +26,6 @@ def venv_python() -> Path:
     if sys.platform.startswith("win"):
         return VENV_DIR / "Scripts" / "python.exe"
     return VENV_DIR / "bin" / "python"
-
-
-def is_running_in_streamlit() -> bool:
-    try:
-        from streamlit.runtime.scriptrunner import get_script_run_ctx
-    except Exception:
-        return False
-    return get_script_run_ctx() is not None
-
 
 def ensure_virtualenv() -> Path:
     python_path = venv_python()
@@ -103,8 +95,27 @@ def find_free_port(start_port: int = 8501, attempts: int = 50) -> int:
     raise RuntimeError("Nao foi possivel localizar uma porta livre para iniciar o Streamlit.")
 
 
-def open_browser_later(url: str) -> None:
-    threading.Timer(1.5, lambda: webbrowser.open(url, new=2)).start()
+def stream_process_output(process: subprocess.Popen[str]) -> int:
+    browser_opened = False
+    url_pattern = re.compile(r"https?://[^\s]+")
+
+    if process.stdout is None:
+        return process.wait()
+
+    try:
+        for raw_line in process.stdout:
+            line = raw_line.rstrip("\r\n")
+            print(line)
+
+            if not browser_opened:
+                match = url_pattern.search(line)
+                if match:
+                    webbrowser.open(match.group(0), new=2)
+                    browser_opened = True
+    finally:
+        process.stdout.close()
+
+    return process.wait()
 
 
 def relaunch_inside_venv() -> int:
@@ -127,9 +138,6 @@ def run_streamlit() -> int:
     if port != 8501:
         print(f"Porta 8501 ocupada. Usando {port}.")
 
-    print(f"Abrindo a calculadora em {url}")
-    open_browser_later(url)
-
     command = [
         str(python_path),
         "-m",
@@ -140,19 +148,28 @@ def run_streamlit() -> int:
         "localhost",
         "--server.port",
         str(port),
+        "--server.headless",
+        "true",
         "--browser.gatherUsageStats",
         "false",
     ]
-    return subprocess.call(command, cwd=PROJECT_ROOT)
+    env = os.environ.copy()
+    env["PYTHONUNBUFFERED"] = "1"
+
+    print(f"Iniciando a calculadora em {url}")
+    process = subprocess.Popen(
+        command,
+        cwd=PROJECT_ROOT,
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        bufsize=1,
+    )
+    return stream_process_output(process)
 
 
 def main() -> int:
-    if is_running_in_streamlit():
-        from dissidio_ui import main as run_ui
-
-        run_ui()
-        return 0
-
     if not running_inside_project_venv():
         return relaunch_inside_venv()
 
